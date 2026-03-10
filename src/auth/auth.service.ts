@@ -118,10 +118,8 @@ export class AuthService {
     return {
       message: 'If that email exists, a reset link has been sent.',
       resetToken: rawToken,
-      resetLink: `http://localhost:3000/forgot-password/reset-password?token=${rawToken}`,
+      resetLink: `http://localhost:3000/forgot-password/reset-password/${rawToken}`,
     };
-
-
   }
 
   async resetPassword(resetPasswordDto: ResetPasswordDto) {
