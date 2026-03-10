@@ -10,7 +10,9 @@ import { RegisterDto } from './dto/register.dto';
 import { User } from '../users/schema/users.schema';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
-
+import { ResetPasswordDto } from './dto/reset.dto';
+import { ForgotPasswordDto } from './dto/forgot.dto';
+import { randomBytes, createHash } from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -84,5 +86,69 @@ export class AuthService {
         email: user.email,
       },
     };
+  }
+
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
+    const { email } = forgotPasswordDto;
+    const normalizedEmail = email.toLowerCase();
+
+    const user = await this.userModel.findOne({
+      email: normalizedEmail,
+    });
+
+    // กัน email enumeration:
+    // ต่อให้ไม่เจอ user ก็คืนข้อความสำเร็จแบบเดียวกัน
+    if (!user) {
+      return {
+        message: 'If that email exists, a reset link has been sent.',
+      };
+    }
+
+    const rawToken = randomBytes(32).toString('hex');
+    const hashedToken = createHash('sha256').update(rawToken).digest('hex');
+
+    const expiresAt = new Date(Date.now() + 1000 * 60 * 15); // 15 นาที
+
+    user.resetPasswordToken = hashedToken;
+    user.resetPasswordExpires = expiresAt;
+    await user.save();
+
+    // ตอน dev ให้คืน token/link กลับมาก่อน
+    // ตอนขึ้น production ค่อยเปลี่ยนเป็นส่ง email จริง
+    return {
+      message: 'If that email exists, a reset link has been sent.',
+      resetToken: rawToken,
+      resetLink: `http://localhost:3000/forgot-password/reset-password?token=${rawToken}`,
+    };
+
+
+  }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto) {
+    const { token, newPassword } = resetPasswordDto;
+
+    const hashedToken = createHash('sha256').update(token).digest('hex');
+
+    const user = await this.userModel.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: new Date() },
+    });
+
+    if (!user) {
+      throw new BadRequestException('Invalid or expired reset token');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedPassword;
+    user.resetPasswordToken = null;
+    user.resetPasswordExpires = null;
+
+    await user.save();
+
+    return {
+      message: 'Password reset successful',
+    };
+
   }
 }
