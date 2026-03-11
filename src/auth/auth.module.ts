@@ -6,9 +6,12 @@ import { User, UserSchema } from '../users/schema/users.schema';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from '../users/users.module';
+import { MailModule } from '../mail/mail.module';
+import Mail from 'nodemailer/lib/mailer';
 
 @Module({
   imports: [
+    MailModule,
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     JwtModule.registerAsync({
       imports: [ConfigModule],

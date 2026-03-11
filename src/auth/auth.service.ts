@@ -13,12 +13,14 @@ import { LoginDto } from './dto/login.dto';
 import { ResetPasswordDto } from './dto/reset.dto';
 import { ForgotPasswordDto } from './dto/forgot.dto';
 import { randomBytes, createHash } from 'crypto';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class AuthService {
     constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     private jwtService: JwtService,
+    private mailService: MailService,
   ) {}
   
   async register(registerDto: RegisterDto) {
@@ -113,12 +115,13 @@ export class AuthService {
     user.resetPasswordExpires = expiresAt;
     await user.save();
 
+    const resetLink = `${process.env.FRONTEND_URL}/forgot-password/reset-password/${rawToken}`;
+    await this.mailService.sendResetPasswordEmail(user.email, resetLink);
+
     // ตอน dev ให้คืน token/link กลับมาก่อน
     // ตอนขึ้น production ค่อยเปลี่ยนเป็นส่ง email จริง
     return {
       message: 'If that email exists, a reset link has been sent.',
-      resetToken: rawToken,
-      resetLink: `http://localhost:3000/forgot-password/reset-password/${rawToken}`,
     };
   }
 
