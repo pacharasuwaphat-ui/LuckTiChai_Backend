@@ -11,5 +11,10 @@ export class FortuneController {
     return this.fortuneService.cardFortune(cardDto);
   }
 
+  @Get('/history/:id')
+  getHistoryById(@Param('id') id: string) {
+    return this.fortuneService.getHistoryById(id);
+  }
+
 
 }

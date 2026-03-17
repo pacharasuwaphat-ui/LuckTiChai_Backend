@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsString , IsEmail } from 'class-validator';
 
 export class CardDto {
   @IsString()
@@ -7,6 +7,9 @@ export class CardDto {
    @IsString()
   Advice: string;
   
-   @IsString()
+  @IsString()
   Outcome: string;
+  
+    @IsString()
+  userId: string;
 }
