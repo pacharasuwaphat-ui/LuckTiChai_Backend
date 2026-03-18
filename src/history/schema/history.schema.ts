@@ -8,22 +8,45 @@ export class FortuneHistory {
   @Prop({ index: true, required: true })
   userId: string;
 
-  @Prop({ enum: ['card'], required: true })
+  @Prop({ enum: ['card' , 'dice'], required: true })
   type: string;
 
-  @Prop({ type: {
-        present: { type: String, required: true },
-        advice: { type: String, required: true },
-        outcome: { type: String, required: true },
-    }, 
-    required: function () {
-        return this.type === 'card';
-    },
-})
+  @Prop({ type: 
+      {
+          present: { type: String, required: true },
+          advice: { type: String, required: true },
+          outcome: { type: String, required: true },
+      }, 
+      required: function () {
+          return this.type === 'card';
+      },})
   cards: {
     present: string;
     advice: string;
     outcome: string;
+  };
+
+  @Prop({ type: 
+      {
+          dice_id:{
+            zodiac: { type: Number, required: true },
+            planet: { type: Number, required: true },
+            house: { type: Number, required: true },
+          },
+          dice_name : {
+            zodiac: { type: String, required: true },
+            planet: { type: String, required: true },
+            house: { type: String, required: true },
+          },
+          dice_advice: { type: String, required: true },
+      }, 
+      required: function () {
+          return this.type === 'dice';
+      },})
+  dice: {
+    zodiac: number;
+    planet: number;
+    house: number;
   };
 
   @Prop({ required: true })

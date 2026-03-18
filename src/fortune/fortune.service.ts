@@ -1,10 +1,17 @@
-import { Injectable } from '@nestjs/common';
 import { CardDto } from './dto/card.dto';
+import { DiceDto } from './dto/dice.dto';
+
 import tarotData from '../../data/major_arcana_meanings_th.json';
+import diceData from '../../data/dice_prediction_1728.json';
+
 import { FortuneHistory, FortuneHistoryDocument } from '../history/schema/history.schema';
+
 import { Model } from 'mongoose';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+
 import { FindService } from 'src/find/find.service';
+import { read } from 'fs';
 
 @Injectable()
 export class FortuneService {
@@ -34,6 +41,49 @@ export class FortuneService {
       message : "Your fortune has been generated based on the card details you provided.",
       readings: newFortuneHistory.reading,
     };
+  }
+
+  async DiceFortune(diceDto: DiceDto) {
+    const { Zodiac, Planet, House , userId} = diceDto;
+
+    const resultDice = diceData.find(item => 
+      item.zodiac_id === Zodiac && 
+      item.planet_id === Planet && 
+      item.house_id === House);
+
+    if (!resultDice) {
+      throw new Error('ไม่พบคำทำนายที่ตรงกับข้อมูลนี้');
+    }
+    
+    // save to history
+    const newFortuneHistory = await this.fortuneHistoryModel.create({
+      userId: userId,
+      type: 'dice',
+      dice: {
+        dice_id : {
+          zodiac: Zodiac,
+          planet: Planet,
+          house: House,
+        },
+        dice_name: {
+          zodiac: resultDice.zodiac,
+          planet: resultDice.planet,
+          house: resultDice.house,
+        },
+        dice_advice: resultDice.advice,
+      },
+      reading: resultDice.prediction
+    });
+
+    return {
+      message : "api can receive dice fortune",  
+      zodiac_name : resultDice.zodiac,
+      planet_name : resultDice.planet,
+      house_name : resultDice.house,
+      readings: newFortuneHistory.reading,
+      advice: resultDice.advice
+    };
+
   }
 
   async getHistoryById(id: string) {
