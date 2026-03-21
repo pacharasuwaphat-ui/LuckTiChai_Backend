@@ -1,8 +1,10 @@
 import { CardDto } from './dto/card.dto';
 import { DiceDto } from './dto/dice.dto';
+import { SiamsiDto } from './dto/siamsi.dto';
 
 import tarotData from '../../data/major_arcana_meanings_th.json';
 import diceData from '../../data/dice_prediction_1728.json';
+import siamsiData from '../../data/siamsi.json';
 
 import { FortuneHistory, FortuneHistoryDocument } from '../history/schema/history.schema';
 
@@ -85,6 +87,36 @@ export class FortuneService {
     };
 
   }
+
+  async siamsiFortune(siamsiDto: SiamsiDto) {
+    const { SiamsiNumber , userId } = siamsiDto;
+    
+    const resultSiamsi = siamsiData.find(item => item.id === SiamsiNumber);
+
+    if (!resultSiamsi) {
+      throw new Error('ไม่พบคำทำนายที่ตรงกับข้อมูลนี้');
+    }
+
+    // save to history
+    const newFortuneHistory = await this.fortuneHistoryModel.create({
+      userId: userId,
+      type: 'siamsi',
+      siamsi: {
+        siamsi_number: SiamsiNumber,
+        siamsi_advice: resultSiamsi.advice,
+        siamsi_level: resultSiamsi.level,
+      },
+      reading: resultSiamsi.prediction
+    });
+
+    return {
+      message : "Your fortune has been generated based on the Siamsi number you provided.",
+      advice: resultSiamsi.advice,
+      level: resultSiamsi.level,
+      readings: newFortuneHistory.reading,
+    };
+  }
+
 
   async getHistoryById(id: string) {
     const history = await this.fortuneHistoryModel

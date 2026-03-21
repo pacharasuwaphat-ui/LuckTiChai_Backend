@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { FortuneService } from './fortune.service';
 import { CardDto } from './dto/card.dto';
 import { DiceDto } from './dto/dice.dto';
+import { SiamsiDto } from './dto/siamsi.dto';
 
 @Controller('fortune')
 export class FortuneController {
@@ -15,6 +16,11 @@ export class FortuneController {
   @Post('dice')
   DiceFortune(@Body() diceDto: DiceDto) {
     return this.fortuneService.DiceFortune(diceDto);
+  }
+
+  @Post('siamsi')
+  siamsiFortune(@Body() siamsiDto: SiamsiDto) {
+    return this.fortuneService.siamsiFortune(siamsiDto);
   }
 
   @Get('/history/:id')

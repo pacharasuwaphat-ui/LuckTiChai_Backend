@@ -8,7 +8,7 @@ export class FortuneHistory {
   @Prop({ index: true, required: true })
   userId: string;
 
-  @Prop({ enum: ['card' , 'dice'], required: true })
+  @Prop({ enum: ['card' , 'dice' , 'siamsi'], required: true })
   type: string;
 
   @Prop({ type: 
@@ -24,6 +24,21 @@ export class FortuneHistory {
     present: string;
     advice: string;
     outcome: string;
+  };
+
+  @Prop({ type: 
+      {
+          siamsi_number: { type: Number, required: true },
+          siamsi_advice: { type: String, required: true },
+          siamsi_level: { type: String, required: true },
+      }, 
+      required: function () {
+          return this.type === 'siamsi';
+      },})
+  siamsi: {
+    siamsi_number: number;
+    siamsi_advice: string;
+    siamsi_level: string;
   };
 
   @Prop({ type: 
