@@ -1,4 +1,4 @@
-import {  IsNotEmpty, IsString, IsDateString , Length } from 'class-validator';
+import {  IsNotEmpty, IsString, IsDateString , Length, Matches  } from 'class-validator';
 
 export class usersUpdateDto {
 
@@ -11,13 +11,12 @@ export class usersUpdateDto {
   username: string;
 
   @IsString()
-  @IsNotEmpty()
-  @Length(10)
+  @Matches(/^[0-9]{10}$/)
   phone: string;
 
   @IsDateString()
   @IsNotEmpty()
-  dob: Date;
+  dob: string;
 
   @IsString()
   @IsNotEmpty()

@@ -17,7 +17,7 @@ export class UserService {
     const {  id, username ,phone , dob , profileImage } = updateDto;
 
     const user = await this.userModel.findOne({
-      id: id,
+      _id: id,
     });
 
     if (!user) {
@@ -29,6 +29,13 @@ export class UserService {
     user.username = username;
     user.phone = phone;
     user.dob = new Date(dob);
+    user.profileImage = profileImage;
+
+    await user.save();
+
+    return {
+      message: 'user update id saved.',
+    };
 
   }
 
