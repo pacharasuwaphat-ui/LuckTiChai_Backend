@@ -8,6 +8,7 @@ import { MailModule } from './mail/mail.module';
 import { FortuneModule } from './fortune/fortune.module';
 import { FindModule } from './find/find.module';
 import { HistoryModule } from './history/history.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { HistoryModule } from './history/history.module';
     FortuneModule,
     FindModule,
     HistoryModule,
+    UploadModule,
     
   ],
   controllers: [AppController],
