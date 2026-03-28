@@ -89,6 +89,7 @@ export class AuthService {
         phone : user?.phone,
         dob : user?.dob,
         profileImage : user?.profileImage,
+        coin : user?.coin,
       },
     };
   }

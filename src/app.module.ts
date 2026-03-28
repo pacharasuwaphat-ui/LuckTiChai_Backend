@@ -9,6 +9,7 @@ import { FortuneModule } from './fortune/fortune.module';
 import { FindModule } from './find/find.module';
 import { HistoryModule } from './history/history.module';
 import { UploadModule } from './upload/upload.module';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { UploadModule } from './upload/upload.module';
     FindModule,
     HistoryModule,
     UploadModule,
+    PaymentModule,
     
   ],
   controllers: [AppController],
