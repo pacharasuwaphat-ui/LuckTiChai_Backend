@@ -8,7 +8,7 @@ export class FortuneHistory {
   @Prop({ index: true, required: true })
   userId: string;
 
-  @Prop({ enum: ['card' , 'dice' , 'siamsi'], required: true })
+  @Prop({ enum: ['card' , 'dice' , 'siamsi' , 'phone' , 'dmy'], required: true })
   type: string;
 
   @Prop({ type: 
@@ -43,6 +43,23 @@ export class FortuneHistory {
 
   @Prop({ type: 
       {
+          phone_number: { type: String, required: true },
+          score : { type: Number, required: true },
+          title : { type: String, required: true },
+          phone_advice: { type: String, required: true },
+      }, 
+      required: function () {
+          return this.type === 'phone';
+      },})
+  phone: {
+    phone_number: string;
+    score: number;
+    title: string;
+    phone_advice: string;
+  };
+
+  @Prop({ type: 
+      {
           dice_id:{
             zodiac: { type: Number, required: true },
             planet: { type: Number, required: true },
@@ -63,6 +80,7 @@ export class FortuneHistory {
     planet: number;
     house: number;
   };
+
 
   @Prop({ required: true })
   reading: string;

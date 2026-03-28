@@ -3,6 +3,7 @@ import { FortuneService } from './fortune.service';
 import { CardDto } from './dto/card.dto';
 import { DiceDto } from './dto/dice.dto';
 import { SiamsiDto } from './dto/siamsi.dto';
+import { PhoneDto } from './dto/phone.dto';
 
 @Controller('fortune')
 export class FortuneController {
@@ -21,6 +22,11 @@ export class FortuneController {
   @Post('siamsi')
   siamsiFortune(@Body() siamsiDto: SiamsiDto) {
     return this.fortuneService.siamsiFortune(siamsiDto);
+  }
+
+  @Post('phone')
+  phoneFortune(@Body() phoneDto: PhoneDto) {
+    return this.fortuneService.phoneFortune(phoneDto);
   }
 
   @Get('/history/:id')

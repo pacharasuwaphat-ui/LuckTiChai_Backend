@@ -1,10 +1,13 @@
 import { CardDto } from './dto/card.dto';
 import { DiceDto } from './dto/dice.dto';
 import { SiamsiDto } from './dto/siamsi.dto';
+import { PhoneDto } from './dto/phone.dto';
 
 import tarotData from '../../data/major_arcana_meanings_th.json';
 import diceData from '../../data/dice_prediction_1728.json';
 import siamsiData from '../../data/siamsi.json';
+import phoneData from '../../data/phone_number.json';
+import phonePrediction from '../../data/phonepredic.json';
 
 import { FortuneHistory, FortuneHistoryDocument } from '../history/schema/history.schema';
 
@@ -117,6 +120,53 @@ export class FortuneService {
     };
   }
 
+  async phoneFortune(phoneDto: PhoneDto) {
+    const { Phone, userId } = phoneDto;
+
+    const last7 = Phone.slice(3);
+    const pairs: string[] = [];
+    for (let i = 0; i < last7.length - 1; i++) {
+      pairs.push(last7[i] + last7[i + 1]);
+    }
+
+    let totalScore = 0;
+
+    for (const pair of pairs) {
+      const found = phoneData.find(item => item.pair === pair);
+      if (found) {
+        totalScore += found.score;
+      }
+    }
+
+    const gradeResult = phonePrediction.grades.find(g =>
+      totalScore >= g.min && totalScore <= g.max
+    );
+
+    if (!gradeResult) {
+      throw new Error('ไม่สามารถประเมินผลได้');
+    }
+    const newFortuneHistory = await this.fortuneHistoryModel.create({
+        userId: userId,
+        type: 'phone',
+        phone: {
+          phone_number: Phone,
+          score: totalScore,
+          title: gradeResult.title,
+          phone_advice: gradeResult.advice,
+        },
+        reading: gradeResult.prediction
+      });
+
+    // ✅ return
+    return {
+      historyId: newFortuneHistory._id,
+      phone: Phone,
+      score: totalScore,
+      title: gradeResult.title,
+      readings: gradeResult.prediction,
+      advice: gradeResult.advice
+    };
+  }
 
   async getHistoryById(id: string) {
     const history = await this.fortuneHistoryModel
