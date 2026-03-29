@@ -7,7 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000', // ปรับตาม URL ของ frontend
+    origin: process.env.CORS_ORIGIN || 'https://lucktichai-frontend.onrender.com', // ปรับตาม URL ของ frontend
   });
   
   app.useGlobalPipes(
