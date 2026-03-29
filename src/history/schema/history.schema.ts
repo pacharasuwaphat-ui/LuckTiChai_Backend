@@ -8,7 +8,7 @@ export class FortuneHistory {
   @Prop({ index: true, required: true })
   userId: string;
 
-  @Prop({ enum: ['card' , 'dice' , 'siamsi' , 'phone' , 'dmy'], required: true })
+  @Prop({ enum: ['card' , 'dice' , 'siamsi' , 'phone' , 'date'], required: true })
   type: string;
 
   @Prop({ type: 
@@ -81,9 +81,46 @@ export class FortuneHistory {
     house: number;
   };
 
+    @Prop({ type: 
+      {
+          prediction:{
+            life_path_number: { type: Number, required: true },
+            title: { type: String, required: true },
+            core_personality: { type: String, required: true },
+            strengths: { type: String, required: true },
+            weaknesses: { type: String, required: true },
+            suitable_careers: { type: String, required: true },
+            love_relationships: { type: String, required: true },
+            advice: { type: String, required: true }
+          },
+          lucky_colors: { type: [String], required: true },
+          dob : { type: String, required: true },
+      }, 
+      required: function () {
+          return this.type === 'date';
+      },})
+  dmy: {
+    prediction:{
+      life_path_number: number;
+      title: string;
+      core_personality: string;
+      strengths: string;
+      weaknesses: string;
+      suitable_careers: string;
+      love_relationships: string;
+      advice: string;
+      };
+    lucky_colors: [string];
+    dob: string;
+  };
 
-  @Prop({ required: true })
+  @Prop({ required: function () {
+          return this.type !== 'date';
+      },}) 
   reading: string;
+
+  @Prop({ type: Boolean , default: false })
+  getAdvice: boolean;
 }
 
 export const FortuneHistorySchema = SchemaFactory.createForClass(FortuneHistory);

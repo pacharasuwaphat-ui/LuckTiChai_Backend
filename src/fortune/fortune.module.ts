@@ -3,6 +3,7 @@ import { FortuneService } from './fortune.service';
 import { FortuneController } from './fortune.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { FortuneHistory, FortuneHistorySchema } from '../history/schema/history.schema';
+import { User , UserSchema } from '../users/schema/users.schema';
 import { HistoryModule } from '../history/history.module';
 import { FindModule } from 'src/find/find.module';
 
@@ -11,8 +12,10 @@ import { FindModule } from 'src/find/find.module';
   imports: [
     HistoryModule,
     FindModule,
+    User,
     MongooseModule.forFeature([
       { name: FortuneHistory.name, schema: FortuneHistorySchema },
+      { name: User.name, schema: UserSchema },
     ]),
   ],
   controllers: [FortuneController],

@@ -4,6 +4,8 @@ import { CardDto } from './dto/card.dto';
 import { DiceDto } from './dto/dice.dto';
 import { SiamsiDto } from './dto/siamsi.dto';
 import { PhoneDto } from './dto/phone.dto';
+import { DmyDto } from './dto/dmy.dto';
+import { GetAdviceDto } from './dto/getadvice.dto';
 
 @Controller('fortune')
 export class FortuneController {
@@ -29,9 +31,24 @@ export class FortuneController {
     return this.fortuneService.phoneFortune(phoneDto);
   }
 
+  @Post('dmy')
+  dateFortune(@Body() dmyDto: DmyDto) {
+    return this.fortuneService.dateFortune(dmyDto);
+  }
+
+  @Post('/advice')
+  getAdvice(@Body() getAdviceDto: GetAdviceDto) {
+    return this.fortuneService.getAdvice(getAdviceDto);
+  }
+
   @Get('/history/:id')
   getHistoryById(@Param('id') id: string) {
     return this.fortuneService.getHistoryById(id);
+  }
+
+  @Get('/findFortune/:id')
+  findFortuneById(@Param('id') fortuneId: string) {
+    return this.fortuneService.findFortuneById(fortuneId);
   }
 
 
