@@ -95,7 +95,8 @@ export class FortuneService {
       planet_name : resultDice.planet,
       house_name : resultDice.house,
       readings: newFortuneHistory.reading,
-      advice: resultDice.advice
+      advice: resultDice.advice,
+      historyId: newFortuneHistory._id,
     };
 
   }
@@ -126,6 +127,7 @@ export class FortuneService {
       advice: resultSiamsi.advice,
       level: resultSiamsi.level,
       readings: newFortuneHistory.reading,
+      historyId: newFortuneHistory._id,
     };
   }
 
