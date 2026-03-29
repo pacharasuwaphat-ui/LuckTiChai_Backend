@@ -1,32 +1,19 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
+import { Injectable } from '@nestjs/common';
+import { Resend } from 'resend';
 
 @Injectable()
-export class MailService implements OnModuleInit {
-  private transporter = nodemailer.createTransport({
-    host: process.env.MAIL_HOST,
-    port: Number(process.env.MAIL_PORT),
-    secure: false, // port 587
-    auth: {
-      user: process.env.MAIL_USER,
-      pass: process.env.MAIL_PASS,
-    },
-  });
-
-  async onModuleInit() {
-    await this.transporter.verify();
-    console.log('SMTP ready');
-  }
+export class MailService {
+  private resend = new Resend(process.env.RESEND_API_KEY);
 
   async sendResetPasswordEmail(to: string, resetLink: string) {
-    await this.transporter.sendMail({
-      from: `"Luck Ti Chai" <${process.env.MAIL_FROM}>`,
+    await this.resend.emails.send({
+      from: 'Luck Ti Chai <onboarding@resend.dev>',
       to,
       subject: 'Reset your password',
       html: `
         <h2>Reset your password</h2>
         <p>Click the link below to reset your password:</p>
-        <a href="${resetLink}">${resetLink}</a> 
+        <a href="${resetLink}">${resetLink}</a>
       `,
     });
   }
