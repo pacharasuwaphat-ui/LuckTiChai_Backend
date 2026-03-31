@@ -7,7 +7,7 @@ export class MailService {
 
   async sendResetPasswordEmail(to: string, resetLink: string) {
     await this.resend.emails.send({
-      from: 'Luck Ti Chai <onboarding@resend.dev>',
+      from: 'Luck Ti Chai <no-reply@lucktichai.site>',
       to,
       subject: 'Reset your password',
       html: `
@@ -16,5 +16,6 @@ export class MailService {
         <a href="${resetLink}">${resetLink}</a>
       `,
     });
+    // console.log(`Reset password email sent to ${to}`);
   }
 }

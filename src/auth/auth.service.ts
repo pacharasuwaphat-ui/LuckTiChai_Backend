@@ -102,11 +102,10 @@ export class AuthService {
       email: normalizedEmail,
     });
 
-    // กัน email enumeration:
-    // ต่อให้ไม่เจอ user ก็คืนข้อความสำเร็จแบบเดียวกัน
+    // กัน email enumeration: ไม่บอกว่ามี email หรือไม่ แต่ถ้ามีจะส่งลิงก์รีเซ็ตไปให้
     if (!user) {
       return {
-        message: 'If that email exists, a reset link has been sent.',
+        message: 'email is not found.',
       };
     }
 
